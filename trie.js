@@ -11,7 +11,14 @@ class Trie {
         this.root = new Node('');
     }
 
-    insert(word, node = trie.root) {
+    /**
+     * Inserts a word into the trie. Will create new nodes as necessary. Sets the final node isEndOfWord to true.
+     * @param {String} word Word being inserted
+     * @param {Node} node Current node that the insert method is on
+     * @precondition word must be lowercase and contain only characters in the alphabet a-z 
+     * @returns true or false depending on whether the word was successfully inserted or not
+     */
+    insert(word, node = this.root) {
         // End of the word has been found
         if (word.length === 0) {
             if (node.isEndOfWord)
@@ -30,11 +37,24 @@ class Trie {
         return this.insert(word.substring(1), node.children[char]);
     }
 
-    delete(word) {
+    /**
+     * Searches for a word in the trie.
+     * @param {String} word Word being searched for
+     * @param {Node} node Current node that the search method is on
+     * @precondition word must be lowercase and contain only characters in the alphabet a-z 
+     * @returns true or false depending on whether the word was found or not
+     */
+    search(word, node = this.root) {
+        if (node === undefined)
+            return false;
 
+        if (word.length === 0)
+            return node.isEndOfWord;
+
+        return this.search(word.substring(1), node.children[word.charAt(0)]);
     }
-    
-    search(word) {
+
+    delete(word) {
 
     }
 
@@ -48,4 +68,5 @@ class Trie {
 trie = new Trie();
 console.log(trie.insert('apple'));
 console.log(trie.insert('apple'));
+console.log(trie.search('apple'));
 // console.log("apple".charAt(1));
