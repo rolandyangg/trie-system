@@ -121,12 +121,18 @@ class Trie {
     }
 }
 
-module.exports = { Trie };
+function checkWord(word) {
+    return word.match(/^[a-zA-Z]+$/) ? true : false;
+}
 
+module.exports = { Trie, checkWord };
+
+/*
 trie = new Trie();
 console.log(trie.insert("the"));
 console.log(trie.insert("there"));
 console.log(trie.insert("them"));
 console.log(trie.insert('into'))
 console.log(trie.autocomplete(''));
-console.log(trie.toString());
+console.log(trie.toString());*/
+// console.log(new Date().toUTCString());
