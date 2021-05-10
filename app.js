@@ -20,17 +20,18 @@ app.get("/prefix/:word", function (req, res) {
     
 });
 
+app.get("/clear", function (req, res) {
+    trie = new Trie();
+    console.log("Trie has been cleared");
+    res.send("The Trie has successfully been cleared");
+});
+
 app.post("/insert/:word", function (req, res) {
     
 });
 
 app.post("/delete/:word", function (req, res) {
     
-});
-
-app.post("/clear", function (req, res) {
-    trie = new Trie();
-    res.send("The Trie has successfully been cleared");
 });
 
 // Turns on the server
