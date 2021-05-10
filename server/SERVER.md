@@ -9,3 +9,5 @@ GET
 POST
 /insert/:word
 /delete/:word
+
+curl -X POST

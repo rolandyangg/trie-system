@@ -1,87 +1,98 @@
-const { Trie, checkWord } = require("./trie.js");
+/**
+ * SETUP
+ */
+// Dependencies
+const { Trie } = require("./trie.js");
 const express = require("express");
 const bodyParser = require("body-parser");
 
+// Setup Server
 const app = express();
-
-const port = process.env.PORT || 80;
-
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+// Global Variables
+const port = process.env.PORT || 80;
 var trie = new Trie();
 
+/**
+ * REST ENDPOINTS
+ */
+// GET
 app.get("/search/:word", function (req, res) {
-    let word = req.params.word;
-    console.log(`(${new Date().toUTCString()}) User has requested to SEARCH for the word "${word}"`);
-    let result = "";
-    if (checkWord(word)) {
-        result = trie.search(word.toLowerCase());
-        console.log(`The result of SEARCH for "${word}" was: ${result}`);
-    } else {
-        result = "INVALID";
-        console.log(`"${word}" is an INVALID input. Failed to SEARCH`);
-    }
-    res.send(result);
+    res.send(trieMethod("SEARCH", req.params.word)); // true or false depending on found
 });
 
 app.get("/autocomplete/:word", function (req, res) {
-    let word = req.params.word;
-    console.log(`(${new Date().toUTCString()}) User has requested to AUTOCOMPLETE for the word "${word}"`);
-    let result = "";
-    if (checkWord(word)) {
-        result = trie.autocomplete(word.toLowerCase());
-        console.log(`The result of AUTOCOMPLETE for "${word}" was: ${result}`);
-    } else {
-        result = "INVALID";
-        console.log(`"${word}" is an INVALID input. Failed to SEARCH`);
-    }
-    res.send(result);
+    res.send(trieMethod("AUTOCOMPLETE", req.params.word)); // Array of words that can be autocompleted
 });
 
 app.get("/view", function (req, res) {
-    console.log(`(${new Date().toUTCString()}) User has requested to VIEW the Trie`);
-    let result = trie.toString();
-    result = result.substring(0, result.length - 1);
-    console.log(result);
-    res.send(result);
+    res.send(trieMethod("VIEW", req.params.word)); // String representation of the Trie
 });
 
 app.get("/clear", function (req, res) {
-    console.log(`(${new Date().toUTCString()}) User has requested to CLEAR the Trie`);
-    trie = new Trie();
-    console.log("Trie has been cleared");
-    res.send(true);
+    res.send(trieMethod("CLEAR", req.params.word)); // true
 });
 
+// POST
 app.post("/insert/:word", function (req, res) {
-    let word = req.params.word;
-    console.log(`(${new Date().toUTCString()}) User has requested to SEARCH for the word "${word}"`);
-    let result = "";
-    if (checkWord(word)) {
-        result = trie.insert(word.toLowerCase());
-        console.log(`The result of SEARCH for "${word}" was: ${result}`);
-    } else {
-        result = "INVALID";
-        console.log(`"${word}" is an INVALID input. Failed to INSERT`);
-    }
-    res.send(result);
+    res.send(trieMethod("INSERT", req.params.word)); // true or false depending on inserted successfully or duplicate
 });
 
 app.post("/delete/:word", function (req, res) {
-    let word = req.params.word;
-    console.log(`(${new Date().toUTCString()}) User has requested to DELETE for the word "${word}"`);
-    let result = "";
-    if (checkWord(word)) {
-        result = trie.delete(word.toLowerCase());
-        console.log(`The result of DELETE for "${word}" was: ${result}`);
-    } else {
-        result = "INVALID";
-        console.log(`"${word}" is an INVALID input. Failed to DELETE`);
-    }
-    res.send(result);
+    res.send(trieMethod("DELETE", req.params.word)); // true or false depending on deleted or not found
 });
+
+/**
+ * FUNCTIONS
+ */
+function trieMethod(method, word = null) {
+    let result;
+
+    // Log event
+    console.log(`(${new Date().toUTCString()}) [${method}] ${word != null ? word : ''}`);
+
+    // Preprocess data
+    if (word != null) {
+        // Check to see if word includes non-letters
+        if (!word.match(/^[a-zA-Z]+$/)) {
+            console.log(`${word} is INVALID`);
+            return "INVALID";
+        }
+        word = word.toLowerCase();
+    }
+    
+    switch (method) {
+        case "SEARCH":
+            result = trie.search(word);
+            break;
+        case "AUTOCOMPLETE":
+            result = trie.autocomplete(word);
+            break;
+        case "VIEW":
+            result = trie.toString();
+            result = result.substring(0, result.length - 1); // Remove the newline at the end
+            break;
+        case "CLEAR":
+            trie = new Trie();
+            result = true;
+            break;
+        case "INSERT":
+            result = trie.insert(word);
+            break;
+        case "DELETE":
+            // If the word exists then it is deletable, else it can't be deleted
+            result = trie.search(word);
+            trie.delete(word);
+            break;
+        default:
+            result = "Error!";
+    }
+    console.log(`(${new Date().toUTCString()}) [${method}] ${word != null ? word : ''} returned [${result}]`);
+    return result;
+}
 
 // Turns on the server
 app.listen(port, function () {
