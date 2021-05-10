@@ -12,20 +12,27 @@ class Trie {
     }
 
     /**
-     * Traverses and obtains the final node of the given word
-     * @param {String} word Word being searched for
+     * Traverses and obtains the final node of the given word if it exists
+     * @param {String} word Word being traverseHelpered for
      * @param {Node} node Current node that the reach method is on
      * @precondition word must be lowercase and contain only characters in the alphabet a-z 
-     * @returns The final node of the given word if it exists or undefined otherwise
+     * @returns The final node of the given word or undefined otherwise
      */
-    reachNode(word, node) {
+    traverseHelper(word, node = this.root) {
         if (node === undefined)
             return undefined;
         
         if (word.length === 0)
             return node;
         
-        return this.reachNode(word.substring(1), node.children[word.charAt(0)]);
+        return this.traverseHelper(word.substring(1), node.children[word.charAt(0)]);
+    }
+
+    search(word) {
+        let result = this.traverseHelper(word);
+        if (result === undefined)
+            return false;
+        return result.isEndOfWord ? true : false;
     }
 
     /**
@@ -54,38 +61,30 @@ class Trie {
         return this.insert(word.substring(1), node.children[char]);
     }
 
-    /**
-     * Searches for a word in the trie.
-     * @param {String} word Word being searched for
-     * @precondition word must be lowercase and contain only characters in the alphabet a-z 
-     * @returns true or false depending on if whether word was successfully found
-     */
-    search(word) {
-        let temp = this.reachNode(word, this.root);
-        if (temp === undefined)
-            return false;
-        return temp.isEndOfWord;
-    }
-
     delete(word, node = this.root) {
-        console.log(node);
         if (node === undefined)
-            return false;
+            return undefined;
 
         // Successfully traversed to the end of the word
         if (word.length === 0) {
-            if (node.isEndOfWord) {
-                if (depended) // If a prefix depends on this char then leave it so it still exists
-                    node.isEndOfWord = false;
-                return true;
-            }
-            return false;
+            if (node.isEndOfWord)
+                node.isEndOfWord = false;
+            
+            if (Object.keys(node.children).length === 0)
+                node = undefined;
+
+            return node;
         }
 
-        // Traverse downwards
-        let deleted =  this.delete(word.substring(1), node.children[word.charAt(0)]);
-        
-        return deleted;
+        let childNode = this.delete(word.substring(1), node.children[word.charAt(0)]);
+
+        if (childNode === undefined)
+            delete node.children[word.charAt(0)];
+
+        if (Object.keys(node.children).length === 0 && !node.isEndOfWord)
+            node = undefined;
+
+        return node;
     }
 
     /**
@@ -95,7 +94,7 @@ class Trie {
      * @param {Array} list List of found words
      * @returns A list of words that the given word could autocomplete to
      */
-    autocomplete(word, node = this.reachNode(word, this.root), list = []) {
+    autocomplete(word, node = this.traverseHelper(word), list = []) {
         if (node === undefined)
             return list;
         
@@ -126,13 +125,3 @@ function checkWord(word) {
 }
 
 module.exports = { Trie, checkWord };
-
-/*
-trie = new Trie();
-console.log(trie.insert("the"));
-console.log(trie.insert("there"));
-console.log(trie.insert("them"));
-console.log(trie.insert('into'))
-console.log(trie.autocomplete(''));
-console.log(trie.toString());*/
-// console.log(new Date().toUTCString());
