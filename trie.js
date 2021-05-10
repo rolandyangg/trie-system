@@ -54,7 +54,11 @@ class Trie {
         return this.search(word.substring(1), node.children[word.charAt(0)]);
     }
 
-    delete(word) {
+    delete(word, node = this.root) {
+
+    }
+
+    prefix(word, node = this.root) {
 
     }
 
@@ -65,8 +69,11 @@ class Trie {
     }
 }
 
+module.exports = { Trie };
+
+/*
 trie = new Trie();
 console.log(trie.insert('apple'));
 console.log(trie.insert('apple'));
-console.log(trie.search('apple'));
+console.log(trie.search('apple'));*/
 // console.log("apple".charAt(1));
