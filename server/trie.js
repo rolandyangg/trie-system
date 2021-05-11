@@ -151,5 +151,3 @@ class Trie {
 }
 
 module.exports = { Trie };
-
-var trie = new Trie();
