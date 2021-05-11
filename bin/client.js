@@ -12,7 +12,7 @@ const { responseBoxen, viewBoxen, errorBoxen, headerBoxen } = require("./boxense
 
 // Global Variables
 const url = 'http://35.237.191.2';
-const version = "1.0.0";
+const version = "1.0.2";
 
 /**
  * MAIN
