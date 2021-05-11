@@ -2,7 +2,7 @@
   "name": "trie-system",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "bin/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,8 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/whyroland/trie-system.git"
   },
-  "author": "",
+  "author": "Roland Yang",
   "license": "ISC",
+  "bin": {
+    "trie-client": "./bin/client.js"
+  },
   "bugs": {
     "url": "https://github.com/whyroland/trie-system/issues"
   },
@@ -19,6 +22,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "inquirer": "^8.0.0"
+    "inquirer": "^8.0.0",
+    "node-fetch": "^2.6.1"
   }
 }

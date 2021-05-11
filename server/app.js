@@ -91,7 +91,7 @@ function trieMethod(method, word = null) {
             result = "Error!";
     }
     console.log(`(${new Date().toUTCString()}) [${method}] ${word != null ? word : ''} returned [${result}]`);
-    return result;
+    return result.json();
 }
 
 // Turns on the server
