@@ -6,8 +6,21 @@
 // Dependencies
 const inquirer = require('inquirer');
 const fetch = require('node-fetch');
+const boxen = require('boxen');
+const chalk = require('chalk');
+
+// Global Variables
 const url = 'http://35.237.191.2';
 const version = "1.0.0";
+
+const responseBoxen = {
+    padding: 1,
+    margin: 1,
+    borderStyle: "bold",
+    borderColor: "cyan",
+    backgroundColor: "#555555",
+    align: "center"
+};
 
 /**
  * MAIN
@@ -21,7 +34,16 @@ menu();
  */
 function menu() {
 
-    console.log(`Trie Client (ver. ${version}) [${new Date().toUTCString()}]`);
+    const headerMessage = chalk.white.bold(`Trie Client (ver. ${version}) [${new Date().toUTCString()}]`);
+
+    const headerBoxen = {
+        padding: 1,
+        borderStyle: "bold",
+        borderColor: "green",
+        backgroundColor: "#555555",
+    };
+
+    console.log(boxen(headerMessage, headerBoxen));
 
     // Give the user choices
     inquirer
@@ -80,42 +102,44 @@ function requestWithInput(action, prompt, httpmethod) {
         .then(answers => {
             // Check to see if in the input is valid only containing letters
             if (!answers.answer.match(/^[a-zA-Z]+$/)) {
-                console.log("Invalid input! You can only input letters\n");
+                console.log(boxen(chalk.white.bold("Invalid input! You can only input letters\n"), responseBoxen));
                 menu();
             } else {
-                fetch(`${url}${action}/${answers.answer}`, {method: httpmethod})
+                fetch(`${url}${action}/${answers.answer}`, {
+                        method: httpmethod
+                    })
                     .then(res => res.json())
                     .then(data => {
                         // Data is a boolean value, for autocomplete it's an Array
-                        switch(action) {
+                        switch (action) {
                             case '/insert':
                                 if (data)
-                                    console.log(`Insert Successful: '${answers.answer}' was inserted into the Trie\n`);
+                                    console.log(boxen(chalk.white.bold(`Insert Successful: '${answers.answer}' was inserted into the Trie\n`), responseBoxen));
                                 else
-                                    console.log(`Insert Failed: '${answers.answer}' already exists in the Trie\n`);
+                                    console.log(boxen(chalk.white.bold(`Insert Failed: '${answers.answer}' already exists in the Trie\n`), responseBoxen));
                                 break;
                             case '/search':
                                 if (data)
-                                    console.log(`Search Successful: Found '${answers.answer}' in the Trie\n`);
+                                    console.log(boxen(chalk.white.bold(`Search Successful: Found '${answers.answer}' in the Trie\n`), responseBoxen));
                                 else
-                                    console.log(`Search Failed: Could not find '${answers.answer}' in the Trie\n`);
+                                    console.log(boxen(chalk.white.bold(`Search Failed: Could not find '${answers.answer}' in the Trie\n`), responseBoxen));
                                 break;
                             case '/delete':
                                 if (data)
-                                    console.log(`Delete Successful: '${answers.answer}' was deleted\n`);
+                                    console.log(boxen(chalk.white.bold(`Delete Successful: '${answers.answer}' was deleted\n`), responseBoxen));
                                 else
-                                    console.log(`Delete Failed: Could not find '${answers.answer}' in the Trie\n`);
+                                    console.log(boxen(chalk.white.bold(`Delete Failed: Could not find '${answers.answer}' in the Trie\n`), responseBoxen));
                                 break;
                             case '/autocomplete':
-                                console.log(`The prefix '${answers.answer}' may autocomplete to:\n${data}\n`);
+                                console.log(boxen(chalk.white.bold(`The prefix '${answers.answer}' may autocomplete to:\n${data}\n`), responseBoxen));
                                 break;
                             default:
-                                console.log("Error!\n");
+                                console.log(boxen(chalk.white.bold(`Error!\n`), responseBoxen));
                         }
                         menu();
                     })
                     .catch(error => {
-                        console.log(error) + "\n";
+                        console.log(boxen(chalk.white.bold(`${error}\n`), responseBoxen));
                         menu();
                     });
             }
@@ -132,19 +156,21 @@ function requestWithInput(action, prompt, httpmethod) {
  * @param {String} httpmethod GET or POST
  */
 function request(action, httpmethod) {
-    fetch(`${url}${action}`, {method: httpmethod})
+    fetch(`${url}${action}`, {
+            method: httpmethod
+        })
         .then(res => res.json())
         .then(data => {
             if (action === '/clear')
-                console.log("The Trie has successfully been cleared!\n"); // Clear Trie
+                console.log(boxen(chalk.white.bold("The Trie has successfully been cleared!\n"), responseBoxen)); // Clear Trie
             else if (action === '/view')
-                console.log(data + "\n"); // Show Trie Contents
+                console.log(boxen(chalk.white.bold(`${data}\n`), responseBoxen)); // Show Trie Contents
             else
-                console.log("Error!\n");
+                console.log(boxen(chalk.white.bold(`Error!\n`), responseBoxen));
             menu();
         })
         .catch(error => {
-            console.log(error) + "\n";
+            console.log(boxen(chalk.white.bold(`${error}\n`), responseBoxen));
             menu();
         });
 }

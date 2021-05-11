@@ -18,6 +18,8 @@ Using npm install all necessary dependencies. This may be performed in either of
 ```bash
 npm install inquirer
 npm install node-fetch
+npm install boxen
+npm install chalk
 ```
 
 or (since all of the dependencies are stored in package.json)
