@@ -133,16 +133,23 @@ class Trie {
     }
 
     /**
-     * Returns a String representation of the Trie, containing the contents and metadata of the Trie
+     * Returns a String representation of the Trie, depth represented by the amount of -
      * @returns {String} Data on the Trie
      */
-    toString() {
-        let result = "The Trie contains the following words:\n"
-        const words = this.autocomplete('');
-        for (let i = 0; i < words.length; i++)
-            result += words[i] + '\n';
+    toString(word = '', node = this.root, result = '') {
+
+        if (node === undefined)
+            return result;
+
+        result += `${word}${node.isEndOfWord ? " (TRIE WORD)" : ""}\n`;
+
+        for (const char in node.children)
+            result = this.toString("-" + word + char, node.children[char], result);
+
         return result;
     }
 }
 
 module.exports = { Trie };
+
+var trie = new Trie();

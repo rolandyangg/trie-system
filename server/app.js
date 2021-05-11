@@ -54,7 +54,7 @@ function trieMethod(method, word = null) {
     let result;
 
     // Log event
-    console.log(`(${new Date().toUTCString()}) [${method}] ${word != null ? word : ''}`);
+    console.log(`(${new Date().toUTCString()}) [${method}] ${word != null ? word : ''} Request Queued`);
 
     // Preprocess data
     if (word != null) {
