@@ -5,12 +5,14 @@
 const { Trie } = require("./trie.js");
 const express = require("express");
 const bodyParser = require("body-parser");
+const queue = require('express-queue');
 
 // Setup Server
 const app = express();
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(queue({activeLimit: 1, queuedLimited: -1 })); // Process only 1 request at a time, -1 means infinite tasks may be queued
 
 // Global Variables
 const port = process.env.PORT || 80;

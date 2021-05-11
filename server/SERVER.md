@@ -4,6 +4,8 @@ The server is hosted live on Google Cloud at http://35.237.191.2.
 
 It is run via an Express Node.js Server on a VM Instance.
 
+In order to run it 24/7 without it closing out, the server is using tmux to run it on a separate terminal within the instance.
+
 # CLI Interaction
 
 The CLI interacts to the server though the use of HTTP Requests.
