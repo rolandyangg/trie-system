@@ -1,9 +1,9 @@
 # trie-system
 A Command Line Interface made with Node which can interact with a Trie hosted globally live on a Google Cloud server
 
-![Trie Example](img/trie_example.png)
+<img src="img/trie_example.png" alt="Trie Client Representation">
 
-![Trie Drawing](img/trie_drawing.png)
+<img src="img/trie_drawing.png" alt="Trie Drawing">
 
 A Trie is a type of search tree often called a prefix tree which stores keys through the use of nodes that hold individual characters.
 
@@ -31,7 +31,7 @@ trie-client
 
 The rest is mainly self-explanatory from there. You will be greeted by a menu with a variety of options to choose from to interact with the Trie on the server.
 
-![Trie Client Menu](img/trie_client.png)
+<img src="img/trie_client.png" alt="Trie Client Menu">
 
 --------------------------------
 
@@ -44,9 +44,9 @@ The CLI currently supports the following operations:
 - View
 - Exit
 
-![Insert Example](img/insert_example.png)
+<img src="img/insert_example.png" alt="Insert Example">
 
-![Error Example](img/error_example.png)
+<img src="img/error_example.png" alt="Error Example">
 
 **You can only input words that contain only english letters. No special characters or spaces .etc**
 

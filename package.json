@@ -1,6 +1,6 @@
 {
   "name": "trie-system",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "bin/index.js",
   "bin": "bin/client.js",

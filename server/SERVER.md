@@ -6,9 +6,9 @@ It is run via an Express Node.js Server on a VM Instance.
 
 In order to run it 24/7 without it closing out, the server is using tmux to run it on a separate terminal within the instance.
 
-![Google Cloud Console](../img/cloud_console.png)
+<img src="../img/server.png" alt="Server Terminal">
 
-![Server Terminal](../img/server.png)
+<img src="../img/cloud_console.png" alt="Google Cloud Console">
 
 # CLI Interaction
 
