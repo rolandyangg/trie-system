@@ -32,22 +32,22 @@ function menu() {
             console.clear();
             switch (answer) {
                 case 'Insert':
-                    requestWithInput('/insert', 'Enter the word you want to insert: ');
+                    requestWithInput('/insert', 'Enter the word you want to insert: ', 'POST');
                     break;
                 case 'Search':
-                    requestWithInput('/search', 'Enter the word you want to search for:');
+                    requestWithInput('/search', 'Enter the word you want to search for: ', 'GET');
                     break;
                 case 'Delete':
-                    requestWithInput('/delete', 'Enter the word you want to delete: ');
+                    requestWithInput('/delete', 'Enter the word you want to delete: ', 'POST');
                     break;
                 case 'Clear':
-                    request('/clear');
+                    request('/clear', 'POST');
                     break;
                 case 'Autocomplete':
-                    requestWithInput('/autocomplete', 'Enter the prefix you want to autocomplete: ');
+                    requestWithInput('/autocomplete', 'Enter the prefix you want to autocomplete: ', 'GET');
                     break;
                 case 'View Trie':
-                    request('/view');
+                    request('/view', 'GET');
                     break;
                 default:
                     console.clear();
@@ -59,7 +59,7 @@ function menu() {
         });
 }
 
-function requestWithInput(action, prompt) {
+function requestWithInput(action, prompt, httpmethod) {
     inquirer
         .prompt([{
             type: 'input',
@@ -72,10 +72,9 @@ function requestWithInput(action, prompt) {
                 console.log("Invalid input! You can only input letters\n");
                 menu();
             } else {
-                fetch(`${url}${action}/${answers.answer}`)
+                fetch(`${url}${action}/${answers.answer}`, {method: httpmethod})
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data);
                         switch(action) {
                             case '/insert':
                                 if (data)
@@ -95,7 +94,7 @@ function requestWithInput(action, prompt) {
                                 else
                                     console.log(`Delete Failed: Could not find '${answers.answer}' in the Trie\n`);
                                 break;
-                            case 'autocomplete':
+                            case '/autocomplete':
                                 console.log(`The prefix '${answers.answer}' may autocomplete to:\n${data}\n`);
                                 break;
                             default:
@@ -115,8 +114,8 @@ function requestWithInput(action, prompt) {
         });
 }
 
-function request(action) {
-    fetch(`${url}${action}`)
+function request(action, httpmethod) {
+    fetch(`${url}${action}`, {method: httpmethod})
         .then(res => res.json())
         .then(data => {
             if (action === '/clear')
