@@ -24,8 +24,8 @@ app.get("/search/:word", function (req, res) {
     res.send(trieMethod("SEARCH", req.params.word)); // true or false depending on found
 });
 
-app.get("/autocomplete/:word", function (req, res) {
-    res.send(trieMethod("AUTOCOMPLETE", req.params.word)); // Array of words that can be autocompleted
+app.get("/autocomplete/:prefix", function (req, res) {
+    res.send(trieMethod("AUTOCOMPLETE", req.params.prefix)); // Array of words that can be autocompleted
 });
 
 app.get("/view", function (req, res) {
