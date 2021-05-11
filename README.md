@@ -26,7 +26,7 @@ npm install -g trie-system
 In order to activate the CLI use the following command below
 
 ```bash
-trie-client
+trie-system
 ```
 
 The rest is mainly self-explanatory from there. You will be greeted by a menu with a variety of options to choose from to interact with the Trie on the server.
