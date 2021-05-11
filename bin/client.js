@@ -127,7 +127,7 @@ function requestWithInput(action, prompt, httpmethod) {
             }
         })
         .catch(error => {
-            console.log(error) + "\n";
+            console.log(boxen(chalk.white.bold(`${error}`), errorBoxen));
             menu();
         });
 }

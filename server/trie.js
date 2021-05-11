@@ -156,8 +156,3 @@ class Trie {
 }
 
 module.exports = { Trie };
-
-var trie = new Trie();
-trie.insert('apple');
-trie.insert('nut');
-trie.insert('pineapple');
