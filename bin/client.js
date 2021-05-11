@@ -16,10 +16,14 @@ console.clear();
 
 menu();
 
+/**
+ * The main menu that the client refers to so the user can perform an action on the Trie
+ */
 function menu() {
 
     console.log(`Trie Client (ver. ${version}) [${new Date().toUTCString()}]`);
 
+    // Give the user choices
     inquirer
         .prompt([{
             type: 'rawlist',
@@ -59,6 +63,12 @@ function menu() {
         });
 }
 
+/**
+ * Performs a fetch request to the server taking in a singular user input for the selected action
+ * @param {String} action Trie method/request route
+ * @param {String} prompt Question asked to the user for an input
+ * @param {String} httpmethod GET or POST
+ */
 function requestWithInput(action, prompt, httpmethod) {
     inquirer
         .prompt([{
@@ -68,6 +78,7 @@ function requestWithInput(action, prompt, httpmethod) {
             mask: true
         }])
         .then(answers => {
+            // Check to see if in the input is valid only containing letters
             if (!answers.answer.match(/^[a-zA-Z]+$/)) {
                 console.log("Invalid input! You can only input letters\n");
                 menu();
@@ -75,6 +86,7 @@ function requestWithInput(action, prompt, httpmethod) {
                 fetch(`${url}${action}/${answers.answer}`, {method: httpmethod})
                     .then(res => res.json())
                     .then(data => {
+                        // Data is a boolean value, for autocomplete it's an Array
                         switch(action) {
                             case '/insert':
                                 if (data)
@@ -114,14 +126,21 @@ function requestWithInput(action, prompt, httpmethod) {
         });
 }
 
+/**
+ * Performs a fetch request to the server for the selected action
+ * @param {String} action Trie method/request route
+ * @param {String} httpmethod GET or POST
+ */
 function request(action, httpmethod) {
     fetch(`${url}${action}`, {method: httpmethod})
         .then(res => res.json())
         .then(data => {
             if (action === '/clear')
                 console.log("The Trie has successfully been cleared!\n"); // Clear Trie
-            else
+            else if (action === '/view')
                 console.log(data + "\n"); // Show Trie Contents
+            else
+                console.log("Error!\n");
             menu();
         })
         .catch(error => {
