@@ -1,20 +1,23 @@
 {
   "name": "trie-system",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "bin/index.js",
+  "bin": "bin/client.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "trie",
+    "global",
+    "cli"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/whyroland/trie-system.git"
   },
   "author": "Roland Yang",
   "license": "ISC",
-  "bin": {
-    "trie-client": "./bin/client.js"
-  },
   "bugs": {
     "url": "https://github.com/whyroland/trie-system/issues"
   },

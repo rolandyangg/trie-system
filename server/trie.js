@@ -118,6 +118,10 @@ class Trie {
      * @returns {Array} A list of words that the given word could autocomplete to
      */
     autocomplete(word, node = this.traverseHelper(word), list = []) {
+        // Edge case, prefix doesn't exist from root leading to the whole Trie to be traversed
+        if (node === this.root)
+            return [];
+
         // Reached the bottom, node doesn't exist
         if (node === undefined)
             return list;
@@ -137,12 +141,13 @@ class Trie {
      * @returns {String} Data on the Trie
      */
     toString(word = '', node = this.root, result = '') {
-
+        // Reached the bottom, node doesn't exist
         if (node === undefined)
             return result;
 
         result += `${word}${node.isEndOfWord ? " (TRIE WORD)" : ""}\n`;
 
+        // Traverse downwards through Trie
         for (const char in node.children)
             result = this.toString("-" + word + char, node.children[char], result);
 
@@ -151,3 +156,8 @@ class Trie {
 }
 
 module.exports = { Trie };
+
+var trie = new Trie();
+trie.insert('apple');
+trie.insert('nut');
+trie.insert('pineapple');
