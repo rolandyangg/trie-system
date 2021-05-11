@@ -32,10 +32,6 @@ app.get("/view", function (req, res) {
     res.send(trieMethod("VIEW", req.params.word)); // String representation of the Trie
 });
 
-app.get("/clear", function (req, res) {
-    res.send(trieMethod("CLEAR", req.params.word)); // true
-});
-
 // POST
 app.post("/insert/:word", function (req, res) {
     res.send(trieMethod("INSERT", req.params.word)); // true or false depending on inserted successfully or duplicate
@@ -43,6 +39,10 @@ app.post("/insert/:word", function (req, res) {
 
 app.post("/delete/:word", function (req, res) {
     res.send(trieMethod("DELETE", req.params.word)); // true or false depending on deleted or not found
+});
+
+app.post("/clear", function (req, res) {
+    res.send(trieMethod("CLEAR", req.params.word)); // true
 });
 
 /**

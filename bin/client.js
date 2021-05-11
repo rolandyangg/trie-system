@@ -21,67 +21,112 @@ function menu() {
     console.log(`Trie Client (ver. ${version}) [${new Date().toUTCString()}]`);
 
     inquirer
-    .prompt([{
-        type: 'rawlist',
-        name: 'choice',
-        message: 'What would you like to do?',
-        choices: ['Insert', 'Search', 'Delete', 'Clear', 'Autocomplete', 'View Trie', 'Exit']
-    }])
-    .then(answers => {
-        var answer = answers.choice;
-        switch(answer) {
-            case 'Insert':
-                insert();
-                break;
-            case 'Search':
-                search();
-                break;
-            case 'Delete':
-                remove();
-                break;
-            case 'Clear':
-                clean();
-                break;
-            case 'Autocomplete':
-                autocomplete();
-                break;
-            case 'View Trie':
-                view();
-                break;
-            default:
-                console.clear();
-                process.exit();
-        }
-    })
-    .catch(error => {
-        console.log(error);
-    });
+        .prompt([{
+            type: 'rawlist',
+            name: 'choice',
+            message: 'What would you like to do?',
+            choices: ['Insert', 'Search', 'Delete', 'Clear', 'Autocomplete', 'View Trie', 'Exit']
+        }])
+        .then(answers => {
+            var answer = answers.choice;
+            console.clear();
+            switch (answer) {
+                case 'Insert':
+                    requestWithInput('/insert', 'Enter the word you want to insert: ');
+                    break;
+                case 'Search':
+                    requestWithInput('/search', 'Enter the word you want to search for:');
+                    break;
+                case 'Delete':
+                    requestWithInput('/delete', 'Enter the word you want to delete: ');
+                    break;
+                case 'Clear':
+                    request('/clear');
+                    break;
+                case 'Autocomplete':
+                    requestWithInput('/autocomplete', 'Enter the prefix you want to autocomplete: ');
+                    break;
+                case 'View Trie':
+                    request('/view');
+                    break;
+                default:
+                    console.clear();
+                    process.exit();
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
 
-function insert() {
-    
+function requestWithInput(action, prompt) {
+    inquirer
+        .prompt([{
+            type: 'input',
+            name: 'answer',
+            message: prompt,
+            mask: true
+        }])
+        .then(answers => {
+            if (!answers.answer.match(/^[a-zA-Z]+$/)) {
+                console.log("Invalid input! You can only input letters\n");
+                menu();
+            } else {
+                fetch(`${url}${action}/${answers.answer}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        switch(action) {
+                            case '/insert':
+                                if (data)
+                                    console.log(`Insert Successful: '${answers.answer}' was inserted into the Trie\n`);
+                                else
+                                    console.log(`Insert Failed: '${answers.answer}' already exists in the Trie\n`);
+                                break;
+                            case '/search':
+                                if (data)
+                                    console.log(`Search Successful: Found '${answers.answer}' in the Trie\n`);
+                                else
+                                    console.log(`Search Failed: Could not find '${answers.answer}' in the Trie\n`);
+                                break;
+                            case '/delete':
+                                if (data)
+                                    console.log(`Delete Successful: '${answers.answer}' was deleted\n`);
+                                else
+                                    console.log(`Delete Failed: Could not find '${answers.answer}' in the Trie\n`);
+                                break;
+                            case 'autocomplete':
+                                console.log(`The prefix '${answers.answer}' may autocomplete to:\n${data}\n`);
+                                break;
+                            default:
+                                console.log("Error!\n");
+                        }
+                        menu();
+                    })
+                    .catch(error => {
+                        console.log(error) + "\n";
+                        menu();
+                    });
+            }
+        })
+        .catch(error => {
+            console.log(error) + "\n";
+            menu();
+        });
 }
 
-function search() {
-
+function request(action) {
+    fetch(`${url}${action}`)
+        .then(res => res.json())
+        .then(data => {
+            if (action === '/clear')
+                console.log("The Trie has successfully been cleared!\n"); // Clear Trie
+            else
+                console.log(data + "\n"); // Show Trie Contents
+            menu();
+        })
+        .catch(error => {
+            console.log(error) + "\n";
+            menu();
+        });
 }
-
-function remove() {
-
-}
-
-function clean() {
-
-}
-
-function autocomplete() {
-
-}
-
-function view() {
-    fetch(url + "/view")
-        .then(res => console.log(res));
-        // .then(data => console.log(data + "\n"));
-    menu();
-}
-
