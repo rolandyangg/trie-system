@@ -8,19 +8,11 @@ const inquirer = require('inquirer');
 const fetch = require('node-fetch');
 const boxen = require('boxen');
 const chalk = require('chalk');
+const { responseBoxen, viewBoxen, errorBoxen, headerBoxen } = require("./boxensettings.js");
 
 // Global Variables
 const url = 'http://35.237.191.2';
 const version = "1.0.0";
-
-const responseBoxen = {
-    padding: 1,
-    margin: 1,
-    borderStyle: "bold",
-    borderColor: "cyan",
-    backgroundColor: "#555555",
-    align: "center"
-};
 
 /**
  * MAIN
@@ -33,17 +25,7 @@ menu();
  * The main menu that the client refers to so the user can perform an action on the Trie
  */
 function menu() {
-
-    const headerMessage = chalk.white.bold(`Trie Client (ver. ${version}) [${new Date().toUTCString()}]`);
-
-    const headerBoxen = {
-        padding: 1,
-        borderStyle: "bold",
-        borderColor: "green",
-        backgroundColor: "#555555",
-    };
-
-    console.log(boxen(headerMessage, headerBoxen));
+    console.log(boxen(chalk.white.bold(`Trie Client (ver. ${version}) [${new Date().toUTCString()}]`), headerBoxen));
 
     // Give the user choices
     inquirer
@@ -102,7 +84,7 @@ function requestWithInput(action, prompt, httpmethod) {
         .then(answers => {
             // Check to see if in the input is valid only containing letters
             if (!answers.answer.match(/^[a-zA-Z]+$/)) {
-                console.log(boxen(chalk.white.bold("Invalid input! You can only input letters\n"), responseBoxen));
+                console.log(boxen(chalk.white.bold("Invalid input! You can only input letters"), errorBoxen));
                 menu();
             } else {
                 fetch(`${url}${action}/${answers.answer}`, {
@@ -114,32 +96,32 @@ function requestWithInput(action, prompt, httpmethod) {
                         switch (action) {
                             case '/insert':
                                 if (data)
-                                    console.log(boxen(chalk.white.bold(`Insert Successful: '${answers.answer}' was inserted into the Trie\n`), responseBoxen));
+                                    console.log(boxen(chalk.white.bold(`Insert Successful: '${answers.answer}' was inserted into the Trie`), responseBoxen));
                                 else
-                                    console.log(boxen(chalk.white.bold(`Insert Failed: '${answers.answer}' already exists in the Trie\n`), responseBoxen));
+                                    console.log(boxen(chalk.white.bold(`Insert Failed: '${answers.answer}' already exists in the Trie`), errorBoxen));
                                 break;
                             case '/search':
                                 if (data)
-                                    console.log(boxen(chalk.white.bold(`Search Successful: Found '${answers.answer}' in the Trie\n`), responseBoxen));
+                                    console.log(boxen(chalk.white.bold(`Search Successful: Found '${answers.answer}' in the Trie`), responseBoxen));
                                 else
-                                    console.log(boxen(chalk.white.bold(`Search Failed: Could not find '${answers.answer}' in the Trie\n`), responseBoxen));
+                                    console.log(boxen(chalk.white.bold(`Search Failed: Could not find '${answers.answer}' in the Trie`), errorBoxen));
                                 break;
                             case '/delete':
                                 if (data)
-                                    console.log(boxen(chalk.white.bold(`Delete Successful: '${answers.answer}' was deleted\n`), responseBoxen));
+                                    console.log(boxen(chalk.white.bold(`Delete Successful: '${answers.answer}' was deleted`), responseBoxen));
                                 else
-                                    console.log(boxen(chalk.white.bold(`Delete Failed: Could not find '${answers.answer}' in the Trie\n`), responseBoxen));
+                                    console.log(boxen(chalk.white.bold(`Delete Failed: Could not find '${answers.answer}' in the Trie`), errorBoxen));
                                 break;
                             case '/autocomplete':
-                                console.log(boxen(chalk.white.bold(`The prefix '${answers.answer}' may autocomplete to:\n${data}\n`), responseBoxen));
+                                console.log(boxen(chalk.white.bold(`The prefix '${answers.answer}' may autocomplete to:\n${data}`), responseBoxen));
                                 break;
                             default:
-                                console.log(boxen(chalk.white.bold(`Error!\n`), responseBoxen));
+                                console.log(boxen(chalk.white.bold(`Error!`), errorBoxen));
                         }
                         menu();
                     })
                     .catch(error => {
-                        console.log(boxen(chalk.white.bold(`${error}\n`), responseBoxen));
+                        console.log(boxen(chalk.white.bold(`${error}`), errorBoxen));
                         menu();
                     });
             }
@@ -162,15 +144,15 @@ function request(action, httpmethod) {
         .then(res => res.json())
         .then(data => {
             if (action === '/clear')
-                console.log(boxen(chalk.white.bold("The Trie has successfully been cleared!\n"), responseBoxen)); // Clear Trie
+                console.log(boxen(chalk.white.bold("The Trie has successfully been cleared!"), responseBoxen)); // Clear Trie
             else if (action === '/view')
-                console.log(boxen(chalk.white.bold(`${data}\n`), responseBoxen)); // Show Trie Contents
+                console.log(boxen(chalk.white.bold(`Trie:${data}`), viewBoxen)); // Show Trie Contents
             else
-                console.log(boxen(chalk.white.bold(`Error!\n`), responseBoxen));
+                console.log(boxen(chalk.white.bold(`Error!`), errorBoxen));
             menu();
         })
         .catch(error => {
-            console.log(boxen(chalk.white.bold(`${error}\n`), responseBoxen));
+            console.log(boxen(chalk.white.bold(`${error}`), errorBoxen));
             menu();
         });
 }
