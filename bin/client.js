@@ -80,8 +80,8 @@ function autocomplete() {
 
 function view() {
     fetch(url + "/view")
-        .then(res => res.json())
-        .then(data => console.log(data + "\n"));
+        .then(res => console.log(res));
+        // .then(data => console.log(data + "\n"));
     menu();
 }
 
