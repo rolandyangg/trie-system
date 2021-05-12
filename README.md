@@ -48,6 +48,8 @@ The CLI currently supports the following operations:
 
 <img src="img/error_example.png" alt="Error Example">
 
+<img src="img/autocomplete_example.png" alt="Autocomplete Example">
+
 **You can only input words that contain only english letters. No special characters or spaces .etc**
 
 Since the Trie is hosted globally on a server, it can be manipulated by multiple clients at the same time, so if another client performs operations at the same time as you, your operations may reflect different results than expected.
